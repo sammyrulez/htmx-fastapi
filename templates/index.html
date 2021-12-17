@@ -1,0 +1,13 @@
+﻿<html>
+<head>
+    <title>Item Details</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+</head>
+<body>
+    <h1>Items:</h1>
+    <div hx-get="/items/1" hx-trigger="mouseenter once">
+        [Here Mouse, Mouse!]
+      </div>
+</body>
+</html>
