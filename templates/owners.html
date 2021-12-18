@@ -1,0 +1,10 @@
+﻿<h2>Owners</h2>
+<p>
+    <button hx-get="/owners/new"> Add </button>
+</p>
+<div >
+    {% for owner in owners %}
+        <div> {{owner.name}} 
+            <button hx-get="/owners/{{owner.id}}" hx-target="#content"> Edit </button></div>
+    {% endfor %}
+</div>

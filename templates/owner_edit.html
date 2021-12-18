@@ -1,0 +1,7 @@
+﻿<form hx-post="/owners/{{owner.id}}" hx-target="#content" hx-ext='json-enc' >
+    <input type="hidden" name="id" value="{{owner.id}}" />
+   <p> Name:<input type="text" name="name" value="{{owner.name}}" /> </p>
+   <p>
+       <button>Submit</button>
+   </p>
+</form>
