@@ -22,7 +22,7 @@ OwnerPetModel = ForwardRef("Owner")
 class Pet(BaseModel):
     id: int
     name: str
-    owner: OwnerPetModel
+    owner: Optional[OwnerPetModel] = None
 
 class OwnerCreate(BaseModel):
     name: str
