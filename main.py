@@ -1,4 +1,5 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
+import uuid
 from fastapi import FastAPI, Request, Form
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
@@ -7,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from pydantic.fields import ModelField
 import inspect
+
+from pydantic.types import UUID1
 
 app = FastAPI()
 
@@ -64,17 +67,20 @@ async def new_owner(request: Request):
 
 @app.post("/owners/", response_class=HTMLResponse)
 async def new_owner_save(request: Request, form_data: OwnerCreate):
-    print(form_data)
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
+    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
 
+@app.delete("/owners/{id}", response_class=HTMLResponse)
+async def delete_owner(request: Request,id: int):
+    owner = owners[find_owner(id)]
+    owners.remove(owner)
     return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
 
 
 @app.get("/owners/{id}", response_class=HTMLResponse)
 async def get_owner_detail(request: Request, id: int):
     owner = owners[find_owner(id)]
-    print(owner)
     return templates.TemplateResponse("owner_edit.html", {"request": request, "owner": owner})
 
 
@@ -87,4 +93,4 @@ async def update_owner_detail(request: Request, id: int, form_data: Owner, ):
 @app.get("/pets/new_row", response_class=HTMLResponse)
 async def new_pet_detail(request: Request):
 
-    return templates.TemplateResponse("pet_new_row.html", {"request": request})
+    return templates.TemplateResponse("pet_new_row.html", {"request": request,"tmp_id": uuid.uuid1() })

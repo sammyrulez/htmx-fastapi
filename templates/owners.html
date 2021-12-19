@@ -18,7 +18,7 @@
       <td> {{owner.name}} </td>  
       <td>
            <button hx-get="/owners/{{owner.id}}" hx-target="#content" type="button" class="btn btn-dark" > <i class="bi bi-pencil"></i>  Edit </button> 
-           <button hx-get="/owners/{{owner.id}}" hx-target="#content" type="button" class="btn btn-danger" > <i class="bi-trash"></i> Delete </button> 
+           <button hx-delete="/owners/{{owner.id}}" hx-target="#content" type="button" class="btn btn-danger" > <i class="bi-trash"></i> Delete </button> 
     </td>  
             
         </tr>

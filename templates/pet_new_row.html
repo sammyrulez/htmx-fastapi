@@ -1,6 +1,9 @@
-﻿<tr>
+﻿<tr id="pet_{{tmp_id}}">
     <td>
         <input type="hidden" name="pets_id_list" value="0" />
         <input type="text" name="pets_name_list" value="Fuffy" />
+    </td>
+    <td>
+        <button hx-get="{{ url_for('static', path='/empty.html') }}" hx-target="#pet_{{tmp_id}}" type="button" class="btn btn-danger" > <i class="bi-trash"></i> Delete </button> 
     </td>
 </tr>

@@ -8,10 +8,11 @@ The classic example to try out new things. WIP
 * Bootstrab layout
 * Related entities Crud
 * HTMX extension
+* Delete entry
 
 ## Todo
 
-* Delete entry
+
 * Less duplicate code
 * Auth
 * Improve lyout
