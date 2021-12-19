@@ -5,7 +5,7 @@ The classic example to try out new things. WIP
 ## Done
 
 * Basic crud
-* Bootstrab layout
+* Bootstrap layout
 * Related entities Crud
 * HTMX extension
 * Delete entry
