@@ -1,4 +1,4 @@
-﻿from typing import Any, Type
+﻿from typing import Any, List, Optional, Type
 from fastapi import FastAPI, Request, Form
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
@@ -16,8 +16,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+
 class OwnerCreate(BaseModel):
     name: str
+    #pets:Optional[List[Pet]]
+    
 
 
 class Owner(OwnerCreate):
@@ -53,13 +56,16 @@ async def get_owners_list(request: Request):
 
 
 @app.get("/owners/new", response_class=HTMLResponse)
-async def get_owner_detail(request: Request):
+async def new_owner(request: Request):
     return templates.TemplateResponse("owner_new.html", {"request": request})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
-async def get_owner_detail(request: Request, form_data: OwnerCreate):
-    owners.append(Owner(id=len(owners), name=form_data.name))
+async def new_owner_save(request: Request, form_data: OwnerCreate):
+    new_owner = Owner(id=1 + len(owners), name=form_data.name)
+    owners.append(new_owner)
+
+
     return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
 
 
@@ -71,6 +77,12 @@ async def get_owner_detail(request: Request, id: int):
 
 
 @app.post("/owners/{id}", response_class=HTMLResponse)
-async def get_owner_detail(request: Request, id: int, form_data: Owner):
+async def update_owner_detail(request: Request, id: int, form_data: Owner, ):
     owners[find_owner(id)] = form_data
     return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+
+
+@app.get("/pets/new_row", response_class=HTMLResponse)
+async def new_pet_detail(request: Request):
+
+    return templates.TemplateResponse("pet_new_row.html", {"request": request})
