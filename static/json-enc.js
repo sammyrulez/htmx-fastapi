@@ -39,7 +39,8 @@
                 struct_params[prop] = parameters[prop] 
             }
         }
-        console.log("struct params ",JSON.stringify(struct_params))
-        return (JSON.stringify(parameters));
+        out = JSON.stringify(struct_params)
+        console.log("struct params ", out)
+        return out;
     }
 });

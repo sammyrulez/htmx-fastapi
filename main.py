@@ -1,4 +1,4 @@
-﻿from typing import Any, List, Optional, Type
+﻿from typing import Any, List, Optional, Type, ForwardRef
 from fastapi import FastAPI, Request, Form
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
@@ -16,10 +16,17 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+OwnerPetModel = ForwardRef("Owner")
+
+
+class Pet(BaseModel):
+    id: int
+    name: str
+    owner: OwnerPetModel
 
 class OwnerCreate(BaseModel):
     name: str
-    #pets:Optional[List[Pet]]
+    pets:Optional[List[Pet]]
     
 
 
@@ -27,10 +34,7 @@ class Owner(OwnerCreate):
     id: int
 
 
-class Pet(BaseModel):
-    id: int
-    name: str
-    owner: Owner
+
 
 
 owners = [Owner(id=1, name="Sam"), Owner(id=2, name="Max")]
@@ -62,6 +66,7 @@ async def new_owner(request: Request):
 
 @app.post("/owners/", response_class=HTMLResponse)
 async def new_owner_save(request: Request, form_data: OwnerCreate):
+    print(form_data)
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
 
