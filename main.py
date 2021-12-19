@@ -24,20 +24,18 @@ class Pet(BaseModel):
     name: str
     owner: Optional[OwnerPetModel] = None
 
+
 class OwnerCreate(BaseModel):
     name: str
-    pets:Optional[List[Pet]]
-    
+    pets: Optional[List[Pet]] = []
 
 
 class Owner(OwnerCreate):
     id: int
 
 
-
-
-
-owners = [Owner(id=1, name="Sam"), Owner(id=2, name="Max")]
+owners = [Owner(id=1, name="Sam", pets=[Pet(id=0, name="Chicca")]),
+          Owner(id=2, name="Max")]
 
 
 def find_owner(id: int):
@@ -69,7 +67,6 @@ async def new_owner_save(request: Request, form_data: OwnerCreate):
     print(form_data)
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
-
 
     return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
 

@@ -1,6 +1,23 @@
 ﻿<form hx-post="/owners/{{owner.id}}" hx-target="#content" hx-ext='json-enc' >
     <input type="hidden" name="id" value="{{owner.id}}" />
    <p> Name:<input type="text" name="name" value="{{owner.name}}" /> </p>
+   <h3>Pets</h3>
+   <button hx-get="/pets/new_row" hx-swap="beforeend" hx-target="#pets" > Add pet </button>
+   <table>
+       <thead>
+           <th>Name</th>
+       </thead>
+       <tbody id="pets">
+        {% for pet in owner.pets %}
+        <tr>
+            <td>
+                <input type="hidden" name="pets_id_list" value="{{pet.id}}" />
+                <input type="text" name="pets_name_list" value="{{pet.name}}" />
+            </td>
+        </tr>
+        {% endfor %}
+       </tbody>
+   </table>
    <p>
        <button>Submit</button>
    </p>
