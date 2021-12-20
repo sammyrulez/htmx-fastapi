@@ -50,6 +50,12 @@ def find_owner(id: int):
 pets = []
 
 
+def _display_owners(request):
+    templates.TemplateResponse(
+        "owners.html", {"request": request, "owners": owners}
+        )
+
+
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -57,25 +63,26 @@ async def index(request: Request):
 
 @app.get("/owners/", response_class=HTMLResponse)
 async def get_owners_list(request: Request):
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
 @app.get("/owners/new", response_class=HTMLResponse)
 async def new_owner(request: Request):
-    return templates.TemplateResponse("owner_form.html", {"request": request,"owner":Owner(id=0,name="")})
+    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name="")})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
 async def new_owner_save(request: Request, form_data: OwnerCreate):
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
+
 
 @app.delete("/owners/{id}", response_class=HTMLResponse)
-async def delete_owner(request: Request,id: int):
+async def delete_owner(request: Request, id: int):
     owner = owners[find_owner(id)]
     owners.remove(owner)
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
 @app.get("/owners/{id}", response_class=HTMLResponse)
@@ -87,10 +94,9 @@ async def get_owner_detail(request: Request, id: int):
 @app.post("/owners/{id}", response_class=HTMLResponse)
 async def update_owner_detail(request: Request, id: int, form_data: Owner, ):
     owners[find_owner(id)] = form_data
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
 @app.get("/pets/new_row", response_class=HTMLResponse)
 async def new_pet_detail(request: Request):
-
-    return templates.TemplateResponse("pet_new_row.html", {"request": request,"tmp_id": uuid.uuid1() })
+    return templates.TemplateResponse("pet_new_row.html", {"request": request, "tmp_id": uuid.uuid1()})

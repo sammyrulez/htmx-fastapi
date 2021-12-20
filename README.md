@@ -9,10 +9,9 @@ The classic example to try out new things. WIP
 * Related entities Crud
 * HTMX extension
 * Delete entry
+* Less duplicate code
 
 ## Todo
 
-
-* Less duplicate code
 * Auth
-* Improve lyout
+* Improve layout
