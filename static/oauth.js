@@ -10,8 +10,10 @@
             token = evt.detail.xhr.getResponseHeader('Authorization-Token')
             if(token){
                 window.localStorage.setItem('sect_token',token)
-            }
-           
+            }  
+        }
+        if (name === "htmx:responseError") {
+            console.log("redirect to login in 401 or 403")
         }
     },
 });
