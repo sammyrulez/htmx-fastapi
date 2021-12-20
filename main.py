@@ -1,17 +1,20 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
 import uuid
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from pydantic.fields import ModelField
-import inspect
+from fastapi.security import OAuth2PasswordBearer
 
 from pydantic.types import UUID1
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -50,11 +53,21 @@ def find_owner(id: int):
 pets = []
 
 
-def _display_owners(request):
-    templates.TemplateResponse(
-        "owners.html", {"request": request, "owners": owners}
+
+
+def _display_owners(request, headers= {}):
+    return templates.TemplateResponse(
+        "owners.html", {"request": request, "owners": owners}, headers= headers
         )
 
+@app.get("/login/")
+async def login(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
+
+@app.post("/login/",response_class=HTMLResponse)
+async def authenticate(request: Request,response: Response):
+    headers = {"Authorization-Token": "alone in the world"}
+    return _display_owners(request,headers=headers)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -68,7 +81,7 @@ async def get_owners_list(request: Request):
 
 @app.get("/owners/new", response_class=HTMLResponse)
 async def new_owner(request: Request):
-    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name="")})
+    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name=""),})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
