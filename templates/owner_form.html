@@ -1,6 +1,11 @@
-﻿<form hx-post="/owners/{{owner.id}}" hx-target="#content" hx-ext='json-enc' >
-    <input type="hidden" name="id" value="{{owner.id}}" />
-   <p> Name:<input type="text" name="name" value="{{owner.name}}" /> </p>
+﻿{% set obj_id = '' %}
+{% if owner.id != 0%}
+{% set obj_id = owner.id %}
+{% endif%}
+
+<form hx-post="/owners/{{obj_id}}" hx-target="#content" hx-ext='json-enc' >
+    <input type="hidden" name="id" value="{{owner.id  }}" />
+   <p> Name:<input type="text" name="name" value="{{owner.name }}" /> </p>
    <h3>Pets</h3>
    <button hx-get="/pets/new_row" hx-swap="beforeend" hx-target="#pets" > Add pet </button>
    <table>
@@ -8,7 +13,7 @@
            <th>Name</th>
            <th></th>
        </thead>
-       <tbody id="pets">
+       <tbody id="pets"> 
         {% for pet in owner.pets %}
         <tr id="pet_{{pet.id}}">
             <td>

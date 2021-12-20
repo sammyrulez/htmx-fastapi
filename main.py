@@ -62,7 +62,7 @@ async def get_owners_list(request: Request):
 
 @app.get("/owners/new", response_class=HTMLResponse)
 async def new_owner(request: Request):
-    return templates.TemplateResponse("owner_new.html", {"request": request})
+    return templates.TemplateResponse("owner_form.html", {"request": request,"owner":Owner(id=0,name="")})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
@@ -81,7 +81,7 @@ async def delete_owner(request: Request,id: int):
 @app.get("/owners/{id}", response_class=HTMLResponse)
 async def get_owner_detail(request: Request, id: int):
     owner = owners[find_owner(id)]
-    return templates.TemplateResponse("owner_edit.html", {"request": request, "owner": owner})
+    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": owner})
 
 
 @app.post("/owners/{id}", response_class=HTMLResponse)
