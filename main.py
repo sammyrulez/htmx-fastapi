@@ -1,6 +1,6 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
 import uuid
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
@@ -52,8 +52,14 @@ def find_owner(id: int):
 
 pets = []
 
-
-
+VERY_SECRET_TOKEN = "alone in the world"
+    
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    if token == VERY_SECRET_TOKEN:
+        user = "admin"
+        return user
+    else:
+        raise HTTPException(status_code=403,detail="Invalid token")
 
 def _display_owners(request, headers= {}):
     return templates.TemplateResponse(
@@ -66,7 +72,7 @@ async def login(request: Request):
 
 @app.post("/login/",response_class=HTMLResponse)
 async def authenticate(request: Request,response: Response):
-    headers = {"Authorization-Token": "alone in the world"}
+    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
     return _display_owners(request,headers=headers)
 
 @app.get("/", response_class=HTMLResponse)
@@ -79,8 +85,9 @@ async def get_owners_list(request: Request):
     return _display_owners(request)
 
 
-@app.get("/owners/new", response_class=HTMLResponse)
-async def new_owner(request: Request):
+@app.get("/owners/new", response_class=HTMLResponse,)
+async def new_owner(request: Request, current_user: str = Depends(get_current_user)):
+    print("current_user", current_user)
     return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name=""),})
 
 
