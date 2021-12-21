@@ -1,17 +1,20 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
 import uuid
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Response, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from pydantic.fields import ModelField
-import inspect
+from fastapi.security import OAuth2PasswordBearer
 
 from pydantic.types import UUID1
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -49,6 +52,28 @@ def find_owner(id: int):
 
 pets = []
 
+VERY_SECRET_TOKEN = "alone in the world"
+    
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    if token == VERY_SECRET_TOKEN:
+        user = "admin"
+        return user
+    else:
+        raise HTTPException(status_code=403,detail="Invalid token")
+
+def _display_owners(request, headers= {}):
+    return templates.TemplateResponse(
+        "owners.html", {"request": request, "owners": owners}, headers= headers
+        )
+
+@app.get("/login/")
+async def login(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
+
+@app.post("/login/",response_class=HTMLResponse)
+async def authenticate(request: Request,response: Response):
+    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
+    return _display_owners(request,headers=headers)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -57,25 +82,27 @@ async def index(request: Request):
 
 @app.get("/owners/", response_class=HTMLResponse)
 async def get_owners_list(request: Request):
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
-@app.get("/owners/new", response_class=HTMLResponse)
-async def new_owner(request: Request):
-    return templates.TemplateResponse("owner_form.html", {"request": request,"owner":Owner(id=0,name="")})
+@app.get("/owners/new", response_class=HTMLResponse,)
+async def new_owner(request: Request, current_user: str = Depends(get_current_user)):
+    print("current_user", current_user)
+    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name=""),})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
 async def new_owner_save(request: Request, form_data: OwnerCreate):
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
+
 
 @app.delete("/owners/{id}", response_class=HTMLResponse)
-async def delete_owner(request: Request,id: int):
+async def delete_owner(request: Request, id: int):
     owner = owners[find_owner(id)]
     owners.remove(owner)
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
 @app.get("/owners/{id}", response_class=HTMLResponse)
@@ -87,10 +114,9 @@ async def get_owner_detail(request: Request, id: int):
 @app.post("/owners/{id}", response_class=HTMLResponse)
 async def update_owner_detail(request: Request, id: int, form_data: Owner, ):
     owners[find_owner(id)] = form_data
-    return templates.TemplateResponse("owners.html", {"request": request, "owners": owners})
+    return _display_owners(request)
 
 
 @app.get("/pets/new_row", response_class=HTMLResponse)
 async def new_pet_detail(request: Request):
-
-    return templates.TemplateResponse("pet_new_row.html", {"request": request,"tmp_id": uuid.uuid1() })
+    return templates.TemplateResponse("pet_new_row.html", {"request": request, "tmp_id": uuid.uuid1()})
