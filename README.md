@@ -10,8 +10,9 @@ The classic example to try out new things. WIP
 * HTMX extension
 * Delete entry
 * Less duplicate code
+* Auth
 
 ## Todo
 
-* Auth
+
 * Improve layout
