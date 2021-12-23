@@ -1,3 +1,17 @@
 ﻿h1 {
     color: green;
 }
+
+.small-btn {
+    width: 128px;
+}
+
+.container-1-5 {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    justify-items: stretch;
+    align-items: left;
+ }

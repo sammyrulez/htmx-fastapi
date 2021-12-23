@@ -1,5 +1,7 @@
 ﻿<form hx-post="/login" hx-target="#content" >
- <input type="text" name="username" />
- <input type="password" name="password" />   
-<button class="button primary" type="submit">login</button>
+  <div class="grid">
+    <input type="text" name="username" placeholder="Username" aria-label="Username" required="">
+    <input type="password" name="password" placeholder="Password" aria-label="Password" required="">
+    <button type="submit">  <i class="fas fa-user"></i>  Login</button>
+  </div>
 </form>
