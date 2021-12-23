@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from pydantic.fields import ModelField
 from fastapi.security import OAuth2PasswordBearer
 
-
 from pydantic.types import UUID1
 
 app = FastAPI()
@@ -65,6 +64,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 def _display_owners(request, headers= {}):
     return templates.TemplateResponse(
         "owners.html", {"request": request, "owners": owners}, headers= headers
+        )
+
+@app.get("/login/")
+async def login(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
+
+@app.post("/login/",response_class=HTMLResponse)
+async def authenticate(request: Request,response: Response):
+    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
+    return _display_owners(request,headers=headers)
+
+def _display_owners(request):
+    templates.TemplateResponse(
+        "owners.html", {"request": request, "owners": owners}
         )
 
 @app.get("/login/")
