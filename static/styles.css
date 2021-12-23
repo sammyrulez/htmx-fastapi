@@ -1,17 +1,73 @@
 ﻿h1 {
-    color: green;
+    color: #4682b4;
 }
-
-.small-btn {
-    width: 128px;
-}
-
-.container-1-5 {
-    display: grid;
-    grid-template-columns: 1fr 5fr;
-    grid-template-rows: 1fr;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    justify-items: stretch;
-    align-items: left;
- }
+pre {
+    background: #f4f5f6;
+    border-left: 0.3rem solid #4682b4;
+    font-family: Menlo, Consolas, "Bitstream Vera Sans Mono", "DejaVu Sans Mono",
+      Monaco, monospace;
+  }
+  
+  a {
+    color: #4682b4;
+    text-decoration: none;
+  }
+  
+  select:focus {
+    border: 0.1rem solid #4682b4;
+    outline: 0;
+  }
+  
+  hr {
+    border-top: 0.1rem solid #4682b4;
+    border-width: 0.1rem;
+    margin-bottom: 3.5rem;
+    margin-top: 3rem;
+  }
+  
+  input[type="submit"].button-clear {
+    color: #4682b4;
+    background-color: transparent;
+    border-color: transparent;
+  }
+  .button.button-outline,
+  button.button-outline,
+  input[type="button"].button-outline,
+  input[type="reset"].button-outline,
+  input[type="submit"].button-outline {
+    color: #4682b4;
+    background-color: transparent;
+  }
+  .button,
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"],
+  input[type="submit"] {
+    background-color: #4682b4;
+    border: 0.1rem solid #4682b4;
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    height: 3.8rem;
+    letter-spacing: 0.1rem;
+    line-height: 3.8rem;
+    padding: 0 3rem;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  
+  input[type="text"]:focus,
+  input[type="url"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 0.1rem solid #4682b4;
+    outline: 0;
+  }
+  
