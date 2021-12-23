@@ -1,17 +1,20 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
 import uuid
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Response, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from pydantic.fields import ModelField
-import inspect
+from fastapi.security import OAuth2PasswordBearer
 
 from pydantic.types import UUID1
 
 app = FastAPI()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -49,6 +52,28 @@ def find_owner(id: int):
 
 pets = []
 
+VERY_SECRET_TOKEN = "alone in the world"
+    
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    if token == VERY_SECRET_TOKEN:
+        user = "admin"
+        return user
+    else:
+        raise HTTPException(status_code=403,detail="Invalid token")
+
+def _display_owners(request, headers= {}):
+    return templates.TemplateResponse(
+        "owners.html", {"request": request, "owners": owners}, headers= headers
+        )
+
+@app.get("/login/")
+async def login(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
+
+@app.post("/login/",response_class=HTMLResponse)
+async def authenticate(request: Request,response: Response):
+    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
+    return _display_owners(request,headers=headers)
 
 def _display_owners(request):
     templates.TemplateResponse(
@@ -66,9 +91,10 @@ async def get_owners_list(request: Request):
     return _display_owners(request)
 
 
-@app.get("/owners/new", response_class=HTMLResponse)
-async def new_owner(request: Request):
-    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name="")})
+@app.get("/owners/new", response_class=HTMLResponse,)
+async def new_owner(request: Request, current_user: str = Depends(get_current_user)):
+    print("current_user", current_user)
+    return templates.TemplateResponse("owner_form.html", {"request": request, "owner": Owner(id=0, name=""),})
 
 
 @app.post("/owners/", response_class=HTMLResponse)
