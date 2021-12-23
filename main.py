@@ -1,5 +1,5 @@
 ﻿from typing import Any, List, Optional, Type, ForwardRef
-import uuid
+import uuid, os
 from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.params import Depends
@@ -80,10 +80,20 @@ def _display_owners(request):
         "owners.html", {"request": request, "owners": owners}
         )
 
+@app.get("/login/")
+async def login(request: Request):
+    return templates.TemplateResponse("login_form.html", {"request": request})
+
+@app.post("/login/",response_class=HTMLResponse)
+async def authenticate(request: Request,response: Response):
+    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
+    return _display_owners(request,headers=headers)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    fa_code = os.environ.get("FA_CODE")
+    print(fa_code)
+    return templates.TemplateResponse("index.html", {"request": request, "fa_code": fa_code })
 
 
 @app.get("/owners/", response_class=HTMLResponse)

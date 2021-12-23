@@ -7,7 +7,17 @@
     <input type="hidden" name="id" value="{{owner.id  }}" />
    <p> Name:<input type="text" name="name" value="{{owner.name }}" /> </p>
    <h3>Pets</h3>
-   <button hx-get="/pets/new_row" hx-swap="beforeend" hx-target="#pets" > Add pet </button>
+   <div class="grid">
+    <div>
+        <button hx-get="/pets/new_row" hx-swap="beforeend" hx-target="#pets" > Add pet </button>
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+ </div>
+  
    <table>
        <thead>
            <th>Name</th>
@@ -27,7 +37,14 @@
         {% endfor %}
        </tbody>
    </table>
-   <p>
-       <button>Submit</button>
-   </p>
+   <div class="grid">
+       <div>
+            <button>Submit</button>
+       </div>
+       <div></div>
+       <div></div>
+       <div></div>
+       <div></div>
+       <div></div>
+    </div>
 </form>
