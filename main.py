@@ -61,7 +61,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     else:
         raise HTTPException(status_code=403,detail="Invalid token")
 
-def _display_owners(request, headers= {}):
+def _display_owners(request, headers):
     return templates.TemplateResponse(
         "owners.html", {"request": request, "owners": owners}, headers= headers
         )
@@ -72,13 +72,9 @@ async def login(request: Request):
 
 @app.post("/login/",response_class=HTMLResponse)
 async def authenticate(request: Request,response: Response):
-    headers = {"Authorization-Token": VERY_SECRET_TOKEN}
-    return _display_owners(request,headers=headers)
+    headers_S = {"Authorization-Token": VERY_SECRET_TOKEN}
+    return _display_owners(request,headers=headers_S)
 
-def _display_owners(request):
-    templates.TemplateResponse(
-        "owners.html", {"request": request, "owners": owners}
-        )
 
 @app.get("/login/")
 async def login(request: Request):
@@ -111,14 +107,14 @@ async def new_owner(request: Request, current_user: str = Depends(get_current_us
 async def new_owner_save(request: Request, form_data: OwnerCreate):
     new_owner = Owner(id=1 + len(owners), name=form_data.name)
     owners.append(new_owner)
-    return _display_owners(request)
+    return _display_owners(request, headers = {"Authorization-Token": VERY_SECRET_TOKEN})
 
 
 @app.delete("/owners/{id}", response_class=HTMLResponse)
 async def delete_owner(request: Request, id: int):
     owner = owners[find_owner(id)]
     owners.remove(owner)
-    return _display_owners(request)
+    return _display_owners(request, headers = {"Authorization-Token": VERY_SECRET_TOKEN})
 
 
 @app.get("/owners/{id}", response_class=HTMLResponse)
@@ -130,7 +126,7 @@ async def get_owner_detail(request: Request, id: int):
 @app.post("/owners/{id}", response_class=HTMLResponse)
 async def update_owner_detail(request: Request, id: int, form_data: Owner, ):
     owners[find_owner(id)] = form_data
-    return _display_owners(request)
+    return _display_owners(request, headers = {"Authorization-Token": VERY_SECRET_TOKEN})
 
 
 @app.get("/pets/new_row", response_class=HTMLResponse)
