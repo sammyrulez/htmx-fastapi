@@ -5,7 +5,7 @@ The classic example to try out new things.
 ## Done
 
 * Basic crud
-* Bootstrap layout
+* Basic layout
 * Related entities Crud
 * HTMX extension
 * Delete entry
