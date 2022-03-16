@@ -1,6 +1,6 @@
 ﻿# HTMX FastApi Pydantic Pet clinic
 
-The classic example to try out new things. WIP
+The classic example to try out new things. 
 
 ## Done
 
@@ -12,7 +12,3 @@ The classic example to try out new things. WIP
 * Less duplicate code
 * Auth
 
-## Todo
-
-
-* Improve layout
